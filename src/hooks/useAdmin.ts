@@ -1,51 +1,25 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { queryKeys } from "./queryKeys";
-import { LoginAdminProps } from "@/types";
-import { adminService } from "@/services/api";
 import { customToast } from "@/lib/utils";
+import { useMutation } from "react-query";
+import { QueryKeys } from "./queryKeys";
+import { api } from "@/api";
 
-export const useAdminLogin = () => {
-  const navigate = useNavigate();
-
-  return useMutation({
-    mutationKey: [queryKeys.LOGIN],
-    mutationFn: (data: LoginAdminProps) => {
-      return adminService.login(data);
-    },
-    onSuccess(res) {
-      localStorage.setItem("accessToken", res.data?.accessToken);
-      localStorage.setItem("refreshToken", res.data?.refreshToken);
-      customToast("SUCCESS", "Successfully logged in!");
-      navigate("/");
+export const useAdmin = () => {
+  const loginAdmin = useMutation({
+    mutationKey: [QueryKeys.AUTH],
+    mutationFn: (data: any) => {
+      return api.post("/admin/login", data);
     },
     onError(error: any) {
       console.log(error);
       customToast(
         "ERROR",
-        error?.response?.data?.message || "Error while logging in to account!"
+        error?.response?.data?.message ||
+          "Something went wrong, please try again!"
       );
     },
   });
-};
 
-export const useGetDashboard = () => {
-  return useQuery({
-    queryKey: [queryKeys.GET_DASHBOARD],
-    queryFn: () => {
-      return adminService.getDashboard();
-    },
-    refetchOnWindowFocus: false,
-  });
-};
-
-export const useGetAdminInfo = () => {
-  return useQuery({
-    queryKey: [queryKeys.GET_ADMIN_INFO],
-    queryFn: () => {
-      return adminService.getMe();
-    },
-    refetchOnWindowFocus: false,
-  });
+  return {
+    loginAdmin,
+  };
 };

@@ -1,25 +1,18 @@
-const Navbar = ({
-  name,
-  breadcrumb,
-}: {
+import { useMenuModal } from "@/hooks/useZustand";
+import { Menu } from "lucide-react";
+
+type NavbarProps = {
   name: string;
-  breadcrumb?: string;
-}) => {
+};
+
+const Navbar = ({ name }: NavbarProps) => {
+  const menuModal = useMenuModal();
+
   return (
-    <>
-      <div
-        className={
-          "flex justify-between items-center shadow rounded-sm bg-white p-3"
-        }
-      >
-        <div className="flex flex-col gap-[2px]">
-          <h1 className={"text-base font-medium"}>{name}</h1>
-          {breadcrumb && (
-            <span className="text-xs font-normal">{breadcrumb}</span>
-          )}
-        </div>
-      </div>
-    </>
+    <div className="flex justify-between items-center w-full">
+      <h1 className="text-2xl">{name}</h1>
+      <Menu className="max-md:flex hidden" onClick={menuModal.onOpen} />
+    </div>
   );
 };
 

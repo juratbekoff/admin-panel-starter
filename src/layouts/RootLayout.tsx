@@ -1,16 +1,25 @@
-import { Outlet } from "react-router-dom";
-import { Sidebar } from "../components";
+import MobileSidebar from "@/components/mobile-sidebar";
+import { Sidebar } from "@/components/sidebar";
+import SheetModal from "@/components/ui/sheet";
+import { useMenuModal } from "@/hooks/useZustand";
+import { Outlet } from "react-router";
 
-const RootLayout = () => {
+export default function RootLayout() {
+  const menuModal = useMenuModal();
+
   return (
-    <div className="flex gap-2 ">
-      <Sidebar />
+    <>
+      <SheetModal isOpen={menuModal.isOpen} onClose={menuModal.onClose}>
+        <MobileSidebar />
+      </SheetModal>
 
-      <div className="w-full px-3 pt-4 pb-10 flex flex-col gap-3">
-        <Outlet />
+      <div className="flex gap-5">
+        <Sidebar />
+
+        <div className="flex flex-col gap-4 w-full p-5">
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </>
   );
-};
-
-export default RootLayout;
+}

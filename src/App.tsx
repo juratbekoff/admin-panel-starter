@@ -1,12 +1,14 @@
-import { Route, Routes } from "react-router-dom";
-import { AuthLayout, RootLayout } from "./layouts";
-import { Dashboard, NotFound } from "./pages";
-import { AuthChecker } from "./middlewares";
+import { Route, Routes } from "react-router";
+import RootLayout from "./layouts/RootLayout";
+import { AuthChecker } from "./middlewares/auth";
+import Dashboard from "./pages/Dashboard";
+import Auth from "./pages/Auth";
 
-function App() {
+const App = () => {
   return (
     <Routes>
-      {/* Root layout */}
+      <Route path="/auth" element={<Auth />} />
+
       <Route
         element={
           <AuthChecker>
@@ -15,15 +17,10 @@ function App() {
         }
       >
         <Route index element={<Dashboard />} />
-        {/* Here will be other routes, if needs */}
-
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<h1>Page not found!</h1>} />
       </Route>
-
-      {/* Auth layout */}
-      <Route path="/auth" element={<AuthLayout />} />
     </Routes>
   );
-}
+};
 
 export default App;
